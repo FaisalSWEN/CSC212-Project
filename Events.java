@@ -3,28 +3,13 @@
   ------------------------------------------------------------------------------------*/
 public class Events
 {
-  private int numOfEvnents;
   public LinkedList<Event> list;
 
 
-  // Constructors
+  // @ Constructors
   public Events()
   {
-    numOfEvnents = 0;
     list = new LinkedList<Event>();
-  }
-
-
-  // Methods
-  public static Event createEvent(String evnetTitle, String dateAndTime, String location)
-  {
-    return new Event(evnetTitle, dateAndTime, location);
-  }
-
-
-  // Getters
-  public int getNumOfEvnents() {
-    return numOfEvnents;
   }
 }
 
@@ -33,41 +18,74 @@ public class Events
 /*------------------------------------------------------------------------------------
   Event Class
   ------------------------------------------------------------------------------------*/
-class Event 
+class Event implements Comparable
 {
-  protected String evnetTitle,
-                   dateAndTime,
-                   location;
+  private String eventTitle,
+                 dateAndTime,
+                 location;
   
-  protected int numOfContacts;
   public LinkedList<Contact> involvedContacts;
 
 
   // Constructors
   public Event() 
   {
-    evnetTitle = null;
+    eventTitle = null;
     dateAndTime = null;
     location = null;
 
-    numOfContacts = 0;
     involvedContacts = new LinkedList<Contact>();
   }
 
-   public Event(String evnetTitle, String dateAndTime, String location) 
+  public Event(String title) 
+  {
+    eventTitle = title;
+    dateAndTime = null;
+    location = null;
+
+    involvedContacts = new LinkedList<Contact>();
+  }
+
+   public Event(String eventTitle, String dateAndTime, String location) 
    {
-    this.evnetTitle = evnetTitle;
+    this.eventTitle = eventTitle;
     this.dateAndTime = dateAndTime;
     this.location = location;
 
-    numOfContacts = 0;
     involvedContacts = new LinkedList<Contact>();
   }
-
   
-  // Setters & Getters
-  public void setEvnetTitle(String evnetTitle) {
-    this.evnetTitle = evnetTitle;
+  // @ Methods
+  // #1 Implmented Methods
+  @Override
+  public boolean equals(Object e)
+  {
+    if (e instanceof Event)
+      return ((this.eventTitle).equalsIgnoreCase(((Event) e).geteventTitle()));
+    
+    else return false;
+  }
+
+  @Override
+  public boolean precedes(Object e)
+  {
+    if ((this.eventTitle).compareToIgnoreCase(((Event) e).geteventTitle()) < 0) 
+      return true;
+    
+    else return false;
+  }
+
+  // #2 freeContact: free this event from contact c (remove the contact from involved list)
+  public void freeContact(Contact c) 
+  {
+    if(involvedContacts.exist(c))
+      involvedContacts.remove();
+  }
+
+
+  // #3 Setters & Getters
+  public void seteventTitle(String eventTitle) {
+    this.eventTitle = eventTitle;
   }
 
   public void setDateAndTime(String dateAndTime) {
@@ -78,8 +96,8 @@ class Event
     this.location = location;
   }
 
-  public String getEvnetTitle() {
-    return evnetTitle;
+  public String geteventTitle() {
+    return eventTitle;
   }
 
   public String getDateAndTime() {
@@ -88,9 +106,5 @@ class Event
 
   public String getLocation() {
     return location;
-  }
-
-  public int getNumOfContacts() {
-    return numOfContacts;
   }
 }

@@ -1,4 +1,4 @@
-public class Contact 
+public class Contact implements Comparable
 {
   private String name,
                  phoneNumber,
@@ -7,10 +7,10 @@ public class Contact
                  birthday,
                  note;
 
-  private int numOfEvnents;
   public Events events;
 
-  // Constructors
+  
+  // @ Constructors
   public Contact() 
   {
     name = null;
@@ -20,7 +20,6 @@ public class Contact
     birthday = null;
     note = null;
 
-    numOfEvnents = 0;
     events = new Events();
   }
 
@@ -33,12 +32,44 @@ public class Contact
     this.birthday = birthday;
     this.note = note;
 
-    numOfEvnents = 0;
     events = new Events();
   }
 
+  public Contact(String name) 
+  {
+    this.name = name;
+    this.phoneNumber = null;
+    this.emailAddress = null;
+    this.address = null;
+    this.birthday = null;
+    this.note = null;
+  }
 
-  // Setters & Getters
+  // @ Methods
+  // #1 Implmeneted Methods
+  @Override
+  public boolean equals(Object c)
+  {
+    if (c instanceof Contact)
+    {
+      return ((this.name).equalsIgnoreCase(((Contact) c).getName())
+            || (this.phoneNumber).equalsIgnoreCase(((Contact) c).getPhoneNumber()));
+    }
+
+    else return false;
+  }
+
+  @Override
+  public boolean precedes(Object c)
+  {
+    if ((this.name).compareToIgnoreCase(((Contact) c).getName()) < 0)
+      return true;
+    
+    else return false;
+  }
+
+
+  // #2 Setters & Getters
   public void setName (String name) {
     this.name = name;
   }
@@ -61,10 +92,6 @@ public class Contact
 
   public void setNote (String note) {
     this.note = note;
-  }
-
-  public void setNumOfEvnents(int numOfEvnents) {
-    this.numOfEvnents = numOfEvnents;
   }
   
 
@@ -90,9 +117,5 @@ public class Contact
 
   public String getNote() {
     return note;
-  }
-
-  public int getNumOfEvnents() {
-    return numOfEvnents;
   }
 }

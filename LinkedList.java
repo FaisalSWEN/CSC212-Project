@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------
-  Node Class: For LinkedList ADT
+  Node Class: Work as Element for LinkedList ADT
   ------------------------------------------------------------------------------------*/
 class Node<T> 
 {
@@ -24,11 +24,13 @@ class Node<T>
   ------------------------------------------------------------------------------------*/
 public class LinkedList<T> 
 {
-  protected Node<T> head;
-  protected Node<T> current;
+  private int length;
+  private Node<T> head;
+  private Node<T> current;
 
   public LinkedList() {
     head = current = null;
+    length = 0;
   }
 
   public boolean empty() {
@@ -43,11 +45,11 @@ public class LinkedList<T>
     return false;
   }
 
-  public void findfirst() {
+  public void findFirst() {
     current = head;
   }
 
-  public void findnext() {
+  public void findNext() {
     current = current.next;
   }
 
@@ -55,26 +57,67 @@ public class LinkedList<T>
     return current.data;
   }
 
-  public void update (T val) {
+  public void update(T val) {
     current.data = val;
   }
 
-  public void insert (T val) {
-		Node<T> tmp;
-		
-    if (empty())
-      current = head = new Node<T> (val);
-		
+  // # INSERT METHOD
+  public void insert(T val) // # First Method
+  {
+    if ((val instanceof Comparable) && !empty())
+    {
+
+      if (((Comparable) val).precedes((Comparable) head.data)) // Precedes all Case
+      {
+        Node<T> tmp = new Node<T>(val);
+        tmp.next = head;
+        head = tmp;
+      }
+
+      else // Search Case
+      {
+        Node<T> tmp = head;
+        findFirst();
+
+        while(current != null) // 1: it's within the list
+        {
+          if(((Comparable) val).precedes((Comparable) retrieve()))
+          {
+            tmp.next = new Node<T>(val);
+            (tmp.next).next = current;
+            return;
+          }
+
+          tmp = current; 
+          findNext();
+        }
+
+        tmp.next = new Node<T>(val); // 2: it's the last one
+        findFirst();
+      }
+    }
+
     else 
     {
-			tmp = current.next;
-			current.next = new Node<T> (val);
-			current = current.next;
-			current.next = tmp;
-		}
+      Node<T> tmp;
+      
+      if (empty())
+        current = head = new Node<T>(val);
+      
+      else 
+      {
+        tmp = current.next;
+        current.next = new Node<T>(val);
+        current = current.next;
+        current.next = tmp;
+      }
+    }
+
+    length++;
 	}
 
-  public void remove () {
+  // # REMOVE METHOD
+  public void remove() {
 		if (current == head)
       head = head.next;
 		
@@ -92,5 +135,52 @@ public class LinkedList<T>
 			current = head;
     else
 			current = current.next;
+    
+    length--;
 	}
+
+  // # FIND METHOD: Check if the object key values already exist.
+  public boolean find(T key) 
+  {
+    Node<T> tmp = head;
+
+    while(tmp != null) 
+    {
+      if(tmp.data.equals(key)) 
+      {
+        current = tmp;
+        return true;
+      }
+
+      else 
+        tmp = tmp.next;
+    }
+
+    return false;
+  }
+
+  // # EXIST METHOD: Check if the object key refrence already exist.
+  public boolean exist(T key) 
+  {
+    Node<T> tmp = head;
+
+    while(tmp != null) 
+    {
+      if(tmp.data == key) 
+      {
+        current = tmp;
+        return true;
+      }
+
+      else 
+        tmp = tmp.next;
+    }
+
+    return false;
+  }
+
+  // Getter
+  public int getLength(){
+    return length;
+  }
 }
