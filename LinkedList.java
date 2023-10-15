@@ -118,6 +118,9 @@ public class LinkedList<T>
 
   // # REMOVE METHOD
   public void remove() {
+    if (empty())
+      return;
+
 		if (current == head)
       head = head.next;
 		

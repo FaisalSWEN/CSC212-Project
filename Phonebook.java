@@ -206,7 +206,7 @@ public class Phonebook
     if ((events.list).find(e) == false) // if the event is new, add it to the list
     {
       if (conflictEvent(e, c)) // Check condition for date conflict
-         throw new Exception("Error: Date conflict");
+         throw new Exception("\nError: Date conflict");
 
       (events.list).insert(e);
       ((c.events).list).insert(e);
@@ -216,16 +216,17 @@ public class Phonebook
 
     else // the event is already exist case
     {
-      if (((c.events).list).find(e)) // the event is already exist within the contact
+      Event tmp = (events.list).retrieve();
+      if (((c.events).list).find(tmp)) // the event is already exist within the contact
         return false;
       
       else
       {
-        if (conflictEvent(e, c)) // Check condition for date conflict
+        if (conflictEvent(tmp, c)) // Check condition for date conflict
           throw new Exception("Error: Date conflict");
 
-         ((c.events).list).insert(e);
-         (e.involvedContacts).insert(c);
+         ((c.events).list).insert(tmp);
+         (tmp.involvedContacts).insert(c);
          return true;
       }
     }
@@ -274,6 +275,9 @@ public class Phonebook
         {
           if ((contacts.retrieve()).getEmailAddress().equalsIgnoreCase(key))
             tmp.insert(contacts.retrieve());
+          
+          if ((contacts).last() == false)
+            (contacts).findNext();
         }
 
         return tmp;
@@ -285,6 +289,9 @@ public class Phonebook
         {
           if ((contacts.retrieve()).getAddress().equalsIgnoreCase(key))
             tmp.insert(contacts.retrieve());
+          
+          if ((contacts).last() == false)
+            (contacts).findNext();
         }
 
         return tmp;
@@ -296,6 +303,9 @@ public class Phonebook
         {
           if ((contacts.retrieve()).getBirthday().equalsIgnoreCase(key))
             tmp.insert(contacts.retrieve());
+          
+          if ((contacts).last() == false)
+            (contacts).findNext();
         }
 
         return tmp;
@@ -314,19 +324,28 @@ public class Phonebook
     switch(type)
     {
       case NAME:
-      contacts.findFirst();
+        contacts.findFirst();
         for (int i = 0; i < contacts.getLength(); i++)
         {
           if ((contacts.retrieve()).getName().equalsIgnoreCase(key))
             return contacts.retrieve();
+
+          if ((contacts).last() == false)
+            (contacts).findNext();
         }
 
+        return null;
+
+
       case PHONENUMBER:
-      contacts.findFirst();
+        contacts.findFirst();
         for (int i = 0; i < contacts.getLength(); i++)
         {
           if ((contacts.retrieve()).getPhoneNumber().equalsIgnoreCase(key))
             return contacts.retrieve();
+
+          if ((contacts).last() == false)
+            (contacts).findNext();
         }
 
       default:
@@ -341,22 +360,25 @@ public class Phonebook
   {
     (contacts).findFirst();
     String name;
+    int endIndex;
     String print = "";
 
     for(int i = 0; i < contacts.getLength(); i++)
     {
       name = (contacts.retrieve()).getName();
-      name = name.substring(0, name.indexOf(" "));
-
+      endIndex = name.indexOf(" ");
+      if (endIndex != -1)
+        name = name.substring(0, endIndex);
+     
       if ((name).equalsIgnoreCase(firstName))
       {
         print +=
-        "Name: " + name + "\n"
+        "Name: " + (contacts.retrieve()).getName() + "\n"
       + "Phone Number: " + (contacts.retrieve()).getPhoneNumber() + "\n"
       + "Email Address: " + (contacts.retrieve()).getEmailAddress() + "\n"
       + "Address: " + (contacts.retrieve()).getAddress() + "\n"
       + "Birthday: " + (contacts.retrieve()).getBirthday() + "\n"
-      + "Note: " + (contacts.retrieve()).getNote() + "\n";
+      + "Note: " + (contacts.retrieve()).getNote() + "\n\n";
 
         if (contacts.last() == false)
           contacts.findNext();
@@ -375,7 +397,7 @@ public class Phonebook
       return;
     }
 
-     System.out.println("Event found!");
+     System.out.println("\nEvent found!");
      System.out.println("Event title: " + ((events.list).retrieve()).geteventTitle());
 
      LinkedList<Contact> tmp = ((events.list).retrieve()).involvedContacts; // shorthand for contact list
@@ -429,7 +451,7 @@ public class Phonebook
     {
       System.out.println
       (
-      "Event title: " + ((events.list).retrieve()).geteventTitle() + "\n"
+    "\nEvent title: " + ((events.list).retrieve()).geteventTitle() + "\n"
     + "Event date and time (MM/DD/YYYY HH:MM): " + ((events.list).retrieve()).getDateAndTime() + "\n"
     + "Event location: " + ((events.list).retrieve()).getLocation() + "\n"
       );
@@ -453,6 +475,7 @@ public class Phonebook
     String email;
     String address;
     String birthday;
+    String note;
   
     // Hold Variables for Event
     String eventName;
@@ -504,6 +527,11 @@ public class Phonebook
   
             System.out.print("Enter the contact's email address: ");
             email = input.nextLine();
+             if(is(email, Criterias.EMAILADDRESS) == false)
+            {
+              System.out.println("\nError: Invaild Email input\n\n");
+              break;
+            }
   
             System.out.print("Enter the contact's address: ");
             address = input.nextLine();
@@ -517,8 +545,9 @@ public class Phonebook
             }
   
             System.out.print("Enter the contact's note:" );
+            note = input.nextLine();
   
-            if (add(new Contact(name, phone, email, address, birthday, input.nextLine())))
+            if (add(new Contact(name, phone, email, address, birthday, note)))
             {
               System.out.println("\n\nContact added successfully!");
             }
@@ -782,14 +811,14 @@ public class Phonebook
 
       catch (InputMismatchException e)
       {
-        System.out.println("Invaild input: Non-numeric input");
+        System.out.println("\nInvaild input: Non-numeric input");
         choice = -1;
         input.nextLine(); // solution
       }
 
       catch (Exception e)
       {
-        System.out.println(e.getMessage());
+        System.out.println("\n" + e.getMessage());
         choice = -1;
         input.nextLine(); // solution
       }
