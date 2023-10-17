@@ -19,7 +19,6 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.text.ParseException;
 /*------------------------------------------------------------------------------------
   Criterias enumerations: specifically listed Criterias
@@ -64,7 +63,7 @@ public class Phonebook
       * parse the string into date*/
       try
       {
-        Date javaDate = sdfrmt.parse(strDate); 
+        sdfrmt.parse(strDate); 
       }
       /* Date format is invalid */
       catch (ParseException e)

@@ -80,9 +80,14 @@ public class Contact implements Comparable
   @Override
   public boolean precedes(Object c)
   {
-    if ((this.name).compareToIgnoreCase(((Contact) c).getName()) < 0)
-      return true;
-    
+    if (c instanceof Contact)
+    {
+      if ((this.name).compareToIgnoreCase(((Contact) c).getName()) < 0)
+        return true;
+
+      else return false;
+    }
+
     else return false;
   }
 

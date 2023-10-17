@@ -87,9 +87,14 @@ class Event implements Comparable
   @Override
   public boolean precedes(Object e)
   {
-    if ((this.eventTitle).compareToIgnoreCase(((Event) e).geteventTitle()) < 0) 
-      return true;
-    
+    if (e instanceof Event)
+    {
+      if ((this.eventTitle).compareToIgnoreCase(((Event) e).geteventTitle()) < 0) 
+        return true;
+      
+      else return false;
+    }
+
     else return false;
   }
 
