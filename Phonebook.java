@@ -1,5 +1,27 @@
+/************* Project ***************
+  CLASS: Phonebook.java
+  CSC212 Data structures - Project phase I
+  Fall 2023
+
+  EDIT DATE:
+  10-17-2023
+
+  TEAM:
+
+  Faisal AlBader - 443102460
+  Bader Alshehri - 443100744
+  Turki Alhussan - 443101793
+
+  AUTHORS:
+  Faisal AlBader , (ID: 443102460)
+***********************************/
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.ParseException;
+
 /*------------------------------------------------------------------------------------
   Criterias enumerations: specifically listed Criterias
   ------------------------------------------------------------------------------------*/
@@ -24,6 +46,36 @@ public class Phonebook
   public static LinkedList<Contact> contacts = new LinkedList<Contact>();
   public static Events events = new Events();
 
+  public static boolean validateJavaDate(String strDate)
+  {
+	/* Check if date is 'null' */
+    if (strDate.trim().equals(""))
+    {
+      return true;
+    }
+    /* Date is not 'null' */
+    else
+    {
+      /*
+      * Set preferred date format,
+      * For example MM-dd-yyyy, MM.dd.yyyy,dd.MM.yyyy etc.*/
+      SimpleDateFormat sdfrmt = new SimpleDateFormat("MM/dd/yyyy");
+      sdfrmt.setLenient(false);
+      /* Create Date object
+      * parse the string into date*/
+      try
+      {
+        Date javaDate = sdfrmt.parse(strDate); 
+      }
+      /* Date format is invalid */
+      catch (ParseException e)
+      {
+        return false;
+      }
+      /* Return true if date format is valid */
+      return true;
+    }
+  }
 
   // @ Criterias Method
   // # is: check whether the data is belong to the SC category
@@ -91,7 +143,7 @@ public class Phonebook
           Integer.parseInt("" + data.charAt(8));
           Integer.parseInt("" + data.charAt(9));
 
-          return true;
+          return validateJavaDate(data);
         } 
       
         catch (Exception e) 
